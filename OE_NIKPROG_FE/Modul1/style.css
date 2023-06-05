@@ -1,0 +1,18 @@
+p {
+    color: blue;
+}
+
+h1, h2 {
+    text-decoration: underline;
+    text-align: center;
+    color: red;
+}
+
+a {
+    color: blueviolet;
+}
+
+li {
+    color: coral;
+    font-weight: bold;
+}
