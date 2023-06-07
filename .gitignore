@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/OE_NIKPROG_FE/BasicAPI/.vs/BasicAPI
+/OE_NIKPROG_FE/BasicAPI/BasicAPI/bin/Debug/net6.0
+/OE_NIKPROG_FE/BasicAPI/BasicAPI/obj

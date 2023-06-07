@@ -1,0 +1,15 @@
+body {
+    background-color: rgb(48, 48, 48);
+}
+
+nav {
+    background-color: rgb(48, 48, 48) !important;
+}
+
+* {
+    color: #fff;
+}
+
+hr {
+    background-color: #fff;
+}
