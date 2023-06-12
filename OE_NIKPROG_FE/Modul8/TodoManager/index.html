@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue ToDo Manager</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>
+            TODOS:
+            <span class="badge":class="toDoCounterColor">
+                {{toDoCounter}}</span>
+        </h1>
+        <hr>
+
+        <todo-item
+            v-for="todo in todos"
+            
+            v-bind:id="todo.id"
+            v-bind:text="todo.text"
+            v-bind:type="todo.type"
+            v-bind:tags="todo.tags"
+            v-bind:key="todo.id"
+        >
+        </todo-item>
+
+        <input type="text"
+            v-model="newToDo.text"
+            placeholder="Text of the new To Do Item"
+            class="form-control mb-3"
+        >
+
+        <div class="form-group">
+            <select 
+                v-model="newToDo.type"
+                class="form-control"
+            >
+                <option value="" selected disabled hidden>Please select one</option>
+                <option 
+                    v-for="type in todoTypes":value="type.value"
+                >
+                    {{ type.text }}
+                </option>
+        </select>
+        </div>
+
+        <div class="form-group">
+            <select 
+                multiple
+                v-model="newToDo.tags"
+                class="form-control"
+            >
+                <option value="" selected disabled hidden>Please select one</option>
+                <option 
+                    v-for="tag in tagOptions"
+                >
+                    {{ tag }}
+                </option>
+        </select>
+        </div>
+
+        <button
+            class="btn btn-success btn-block"
+            v-on:click="addNewToDo"
+        >
+            Add New To Do Item
+        </button>
+
+        <input type="text"
+            v-model="newTag"
+            placeholder="Text of the new Tag"
+            class="form-control mb-3 mt-5"
+        >
+
+        <button
+            class="btn btn-warning btn-block"
+            v-on:click="addNewTag"
+        >
+            Add New Tag
+        </button>
+
+    </div>
+
+    <script type="module">
+        
+        import TodoItem from './todo-item.js'
+
+        const { createApp } = Vue
+
+        createApp({
+            components: {
+                TodoItem
+            },
+            data(){
+                return {
+                    todos: [],
+                    newToDo: {
+                        text: '',
+                        type: '',
+                        tags: []
+                    },
+                    todoTypes: [
+                        {
+                            text: 'primary',
+                            value: 'alert-primary'
+                        },
+                        {
+                            text: 'secondary',
+                            value: 'alert-secondary'
+                        },
+                        {
+                            text: 'success',
+                            value: 'alert-success'
+                        },
+                        {
+                            text: 'info',
+                            value: 'alert-info'
+                        },
+                        {
+                            text: 'warning',
+                            value: 'alert-warning'
+                        },
+                        {
+                            text: 'light',
+                            value: 'alert-light'
+                        },
+                        {
+                            text: 'dark',
+                            value: 'alert-dark'
+                        },
+                        {
+                            text: 'danger',
+                            value: 'alert-danger'
+                        },
+                    ],
+                    tagOptions: [
+                        'new', 'urgent', 'pending', 'personal', 'work'
+                    ],
+                    newTag: '',
+                }
+            },
+            computed: {
+                toDoCounter() {
+                    return this.todos.length
+                },
+                toDoCounterColor() {
+                    if(this.toDoCounter > 14)
+                        return 'badge-primary'
+                    else if(this.toDoCounter > 12)
+                        return 'badge-secondary'
+                    else if(this.toDoCounter > 10)
+                        return 'badge-success'
+                    else if(this.toDoCounter > 8)
+                        return 'badge-info'
+                    else if(this.toDoCounter > 6)
+                        return 'badge-warning'
+                    else if(this.toDoCounter > 4)
+                        return 'badge-light'
+                    else if(this.toDoCounter > 2)
+                        return 'badge-dark'
+                    else
+                        return 'badge-danger'
+                },
+            },
+            methods: {
+                async fetchData() {
+                    const url = 'https://gist.githubusercontent.com/siposm/86860e30a000a5dca4b0855f7644bcf2/raw/39c5c3947ee5469532bd7d6ddea6b54e58acd3c0/todos.json'
+                    this.todos = (await (await fetch(url)).json()).todos
+                },
+                
+                deleteToDo: function(toDoId) {
+                    let index = this.todos.findIndex(x => x.id === toDoId)
+                    this.todos.splice(index, 1)
+                },
+                addNewToDo: function(){
+                    this.newToDo.id = Math.floor(Math.random() * Date.now())
+                    this.todos.push(this.newToDo)
+                    this.newToDo = {
+                        text: '',
+                        type: '',
+                        tags: []
+                    }
+
+                    //backend API call should be here...
+                },
+                addNewTag: function(){
+                    this.tagOptions.push(this.newTag)
+                    this.newTag = ''
+                }
+            },
+            created() {
+                this.fetchData()
+            },
+        }).mount('#app')
+    </script>
+</body>
+</html>
